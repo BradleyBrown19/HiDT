@@ -33,7 +33,7 @@ class UnconditionalDiscriminator(nn.Module):
             conv_and_res(256, 512),
             nn.Conv2d(512, 1, 3, stride=1),
             Flatten(),
-            nn.Linear(196, 1)
+            nn.Linear(144, 1)
         )
 
     def forward(self, xb):

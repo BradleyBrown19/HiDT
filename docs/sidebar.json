@@ -7,6 +7,6 @@
     "Custom DataBunch Object": "/DataBunch",
     "Unconditional Discriminator": "/LSGAN_Discriminator",
     "Losses": "/Losses",
-    "Training Wrapper": "/TrainLoop"
+    "Learner": "/TrainLoop"
   }
 }

@@ -28,7 +28,7 @@ entries:
       title: Losses
       url: /Losses
     - output: web,pdf
-      title: Training Wrapper
+      title: Learner
       url: /TrainLoop
     output: web
     title: HiDT
