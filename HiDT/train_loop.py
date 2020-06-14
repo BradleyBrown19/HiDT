@@ -25,6 +25,7 @@ from .building_blocks import *
 from .adaptive_unet import *
 from .data_bunch import *
 from .discriminator import *
+from .losses import *
 
 # Cell
 class HiDT(Learner):

@@ -99,233 +99,6 @@ sidebar: home_sidebar
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Loss">Loss<a class="anchor-link" href="#Loss"> </a></h1>
-</div>
-</div>
-</div>
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">targ</span><span class="p">):</span>
-        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">val</span><span class="o">-</span><span class="n">targ</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">cov</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
-    <span class="n">fact</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">m</span> <span class="o">-=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">mt</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">t</span><span class="p">()</span> 
-    <span class="k">return</span> <span class="n">fact</span> <span class="o">*</span> <span class="n">m</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">mt</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">one_norm</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">p1</span><span class="o">-</span><span class="n">p2</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_adv_loss</span><span class="p">(</span><span class="n">preds</span><span class="p">):</span>
-    <span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">:</span>
-        <span class="n">loss</span> <span class="o">+=</span> <span class="n">mse</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">loss</span>
-    
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_rec_loss</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">orig2</span><span class="p">,</span> <span class="n">orig_recon</span><span class="p">,</span> <span class="n">orig2_recon</span><span class="p">,</span> <span class="n">cycled_orig</span><span class="p">,</span> \
-                <span class="n">cycled_orig2</span><span class="p">,</span> <span class="n">one_rand</span><span class="p">,</span> <span class="n">two_rand</span><span class="p">,</span> <span class="n">one_rand_recon</span><span class="p">,</span> <span class="n">two_rand_recon</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">orig_recon</span><span class="p">)</span> <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">orig2</span><span class="p">,</span> <span class="n">orig2_recon</span><span class="p">)</span> <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">cycled_orig</span><span class="p">)</span> \
-                <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">cycled_orig2</span><span class="p">)</span> <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">one_rand</span><span class="p">,</span> <span class="n">one_rand_recon</span><span class="p">)</span> \
-                <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">two_rand</span><span class="p">,</span> <span class="n">two_rand_recon</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_latent_loss</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="n">l1rec</span><span class="p">,</span> <span class="n">l2rec</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l1rec</span><span class="p">)</span> <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">l2</span><span class="p">,</span> <span class="n">l2rec</span><span class="p">)</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_sdist_loss</span><span class="p">(</span><span class="n">orig_style</span><span class="p">,</span> <span class="n">orig2_style</span><span class="p">,</span> <span class="n">styles</span><span class="p">):</span>
-    <span class="n">styles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">orig_style</span><span class="p">,</span> <span class="n">orig2_style</span><span class="p">,</span> <span class="o">*</span><span class="n">styles</span><span class="p">])</span>
-    
-    <span class="n">smeans</span> <span class="o">=</span> <span class="n">styles</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-    <span class="n">cov_m</span> <span class="o">=</span> <span class="n">cov</span><span class="p">(</span><span class="n">styles</span><span class="p">)</span>
-    <span class="n">cov_diag</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">cov_m</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">smeans</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">cov_m</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">cov_m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> \
-            <span class="o">+</span> <span class="n">one_norm</span><span class="p">(</span><span class="n">cov_diag</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">cov_diag</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-
-    
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">HiDTLoss</span><span class="p">(</span><span class="n">GANModule</span><span class="p">):</span>
-    <span class="s2">&quot;Loss function wrapper&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">loss_funcG</span><span class="p">:</span><span class="n">Callable</span><span class="p">,</span> <span class="n">loss_funcC</span><span class="p">:</span><span class="n">Callable</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">loss_funcG</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">loss_funcC</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">loss_funcG</span><span class="p">,</span><span class="n">loss_funcC</span><span class="p">,</span><span class="n">model</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">content_encoder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_encoder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disc</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">content_encoder</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">style_encoder</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">decoder</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">discriminator</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">style_cap</span> <span class="o">=</span> <span class="mi">16</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">recent_styles</span> <span class="o">=</span> <span class="p">[]</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">lambda1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda5</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda6</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda7</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span>
-        
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_mode</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">discriminator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
-        
-    <span class="k">def</span> <span class="nf">generator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">orig</span><span class="p">,</span> <span class="n">orig2</span><span class="p">,</span> <span class="n">orig_recon</span><span class="p">,</span> <span class="n">orig2_recon</span><span class="p">,</span> <span class="n">orig_style</span><span class="p">,</span> <span class="n">orig2_style</span><span class="p">,</span> <span class="n">orig_cont</span><span class="p">,</span> <span class="n">orig2_cont</span><span class="p">,</span> \
-        <span class="n">one2two</span><span class="p">,</span> <span class="n">two2one</span><span class="p">,</span> <span class="n">one2two_style</span><span class="p">,</span> <span class="n">two2one_style</span><span class="p">,</span> <span class="n">one2two_cont</span><span class="p">,</span> <span class="n">two2one_cont</span><span class="p">,</span> <span class="n">cycled_orig</span><span class="p">,</span> \
-        <span class="n">cycled_orig2</span><span class="p">,</span> <span class="n">one_rand</span><span class="p">,</span> <span class="n">two_rand</span><span class="p">,</span> <span class="n">one_rand_cont</span><span class="p">,</span> <span class="n">two_rand_cont</span><span class="p">,</span> <span class="n">one_rand_style</span><span class="p">,</span> \
-        <span class="n">two_rand_style</span><span class="p">,</span> <span class="n">one_rand_recon</span><span class="p">,</span> <span class="n">two_rand_recon</span><span class="p">,</span> <span class="n">rand_style</span> <span class="o">=</span> <span class="n">output</span>
-        
-        <span class="c1">#adversarial losses</span>
-        <span class="n">adv_loss</span> <span class="o">=</span> <span class="n">get_adv_loss</span><span class="p">([</span><span class="n">one2two</span><span class="p">,</span> <span class="n">two2one</span><span class="p">,</span> <span class="n">one_rand</span><span class="p">,</span> <span class="n">two_rand</span><span class="p">])</span>
-        
-        <span class="c1">#recreation losses</span>
-        <span class="n">rec_loss</span> <span class="o">=</span> <span class="n">get_rec_loss</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">orig2</span><span class="p">,</span> <span class="n">orig_recon</span><span class="p">,</span> <span class="n">orig2_recon</span><span class="p">,</span> <span class="n">cycled_orig</span><span class="p">,</span> \
-                                <span class="n">cycled_orig2</span><span class="p">,</span> <span class="n">one_rand</span><span class="p">,</span> <span class="n">two_rand</span><span class="p">,</span> <span class="n">one_rand_recon</span><span class="p">,</span> <span class="n">two_rand_recon</span><span class="p">)</span>
-        
-        <span class="c1">#TODO: add segmentation to training</span>
-        <span class="c1">#seg_loss = </span>
-        
-        <span class="c1">#latent code losses</span>
-        <span class="n">lat_style_loss</span> <span class="o">=</span> <span class="n">get_latent_loss</span><span class="p">(</span><span class="n">orig_style</span><span class="p">,</span> <span class="n">orig2_style</span><span class="p">,</span> <span class="n">one2two_style</span><span class="p">,</span> <span class="n">two2one_style</span><span class="p">)</span>
-        <span class="n">lat_style_rand_loss</span> <span class="o">=</span>  <span class="n">get_latent_loss</span><span class="p">(</span><span class="n">rand_style</span><span class="p">,</span> <span class="n">rand_style</span><span class="p">,</span> <span class="n">one_rand_style</span><span class="p">,</span> <span class="n">two_rand_style</span><span class="p">)</span>
-        <span class="n">lat_cont_loss</span> <span class="o">=</span> <span class="n">get_latent_loss</span><span class="p">(</span><span class="n">orig_cont</span><span class="p">,</span> <span class="n">orig2_cont</span><span class="p">,</span> <span class="n">one2two_cont</span><span class="p">,</span> <span class="n">two2one_cont</span><span class="p">)</span>
-        <span class="n">lat_cont_loss</span> <span class="o">+=</span> <span class="n">get_latent_loss</span><span class="p">(</span><span class="n">orig_cont</span><span class="p">,</span> <span class="n">orig2_cont</span><span class="p">,</span> <span class="n">one_rand_cont</span><span class="p">,</span> <span class="n">two_rand_cont</span><span class="p">)</span>
-        
-        <span class="c1">#style distribution loss</span>
-        <span class="n">sdist_loss</span> <span class="o">=</span> <span class="n">get_sdist_loss</span><span class="p">(</span><span class="n">orig_style</span><span class="p">,</span> <span class="n">orig2_style</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">recent_styles</span><span class="p">)</span>
-        
-        <span class="bp">self</span><span class="o">.</span><span class="n">recent_styles</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">orig_style</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">orig2_style</span><span class="o">.</span><span class="n">data</span><span class="p">])</span>
-        
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">recent_styles</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">style_cap</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">recent_styles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recent_styles</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
-        
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda1</span><span class="o">*</span><span class="n">adv_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda2</span><span class="o">*</span><span class="n">rec_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda4</span><span class="o">*</span><span class="n">lat_cont_loss</span> \
-                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda5</span><span class="o">*</span><span class="n">lat_style_loss</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda6</span><span class="o">*</span><span class="n">lat_style_rand_loss</span> \
-                    <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda7</span> <span class="o">*</span> <span class="n">sdist_loss</span>
-
-    <span class="k">def</span> <span class="nf">discriminator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">orig</span><span class="p">,</span> <span class="n">orig2</span><span class="p">,</span> <span class="n">one2two</span><span class="p">,</span> <span class="n">two2one</span> <span class="o">=</span> <span class="n">output</span>
-        
-        <span class="k">return</span> <span class="n">mse</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">orig</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span> <span class="o">+</span> <span class="n">mse</span><span class="p">(</span><span class="n">orig2</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">orig2</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span> \
-                <span class="o">+</span> <span class="n">mse</span><span class="p">(</span><span class="n">one2two</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">one2two</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span> <span class="o">+</span> <span class="n">mse</span><span class="p">(</span><span class="n">orig</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">two2one</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-        
-        
-        
-        
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Callbacks">Callbacks<a class="anchor-link" href="#Callbacks"> </a></h1>
 </div>
 </div>
@@ -515,12 +288,158 @@ sidebar: home_sidebar
                 background: #F44336;
             }
         </style>
-      <progress value='19' class='' max='854' style='width:300px; height:20px; vertical-align: middle;'></progress>
-      2.22% [19/854 01:40<1:13:45 5492664.0000]
+      <progress value='15' class='' max='854' style='width:300px; height:20px; vertical-align: middle;'></progress>
+      1.76% [15/854 01:11<1:06:25 6218352.5000]
     </div>
     
 </div>
 
+</div>
+
+<div class="output_area">
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">KeyboardInterrupt</span>                         Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-10-8587f3539821&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span><span class="ansi-blue-fg">()</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>learn<span class="ansi-blue-fg">.</span>fit<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/fastai/basic_train.py</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(self, epochs, lr, wd, callbacks)</span>
+<span class="ansi-green-intense-fg ansi-bold">    198</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span> self<span class="ansi-blue-fg">.</span>opt<span class="ansi-blue-fg">.</span>lr<span class="ansi-blue-fg">,</span>self<span class="ansi-blue-fg">.</span>opt<span class="ansi-blue-fg">.</span>wd <span class="ansi-blue-fg">=</span> lr<span class="ansi-blue-fg">,</span>wd
+<span class="ansi-green-intense-fg ansi-bold">    199</span>         callbacks <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>cb<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">)</span> <span class="ansi-green-fg">for</span> cb <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>callback_fns <span class="ansi-blue-fg">+</span> listify<span class="ansi-blue-fg">(</span>defaults<span class="ansi-blue-fg">.</span>extra_callback_fns<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">]</span> <span class="ansi-blue-fg">+</span> listify<span class="ansi-blue-fg">(</span>callbacks<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 200</span><span class="ansi-red-fg">         </span>fit<span class="ansi-blue-fg">(</span>epochs<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">,</span> metrics<span class="ansi-blue-fg">=</span>self<span class="ansi-blue-fg">.</span>metrics<span class="ansi-blue-fg">,</span> callbacks<span class="ansi-blue-fg">=</span>self<span class="ansi-blue-fg">.</span>callbacks<span class="ansi-blue-fg">+</span>callbacks<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    201</span> 
+<span class="ansi-green-intense-fg ansi-bold">    202</span>     <span class="ansi-green-fg">def</span> create_opt<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> lr<span class="ansi-blue-fg">:</span>Floats<span class="ansi-blue-fg">,</span> wd<span class="ansi-blue-fg">:</span>Floats<span class="ansi-blue-fg">=</span><span class="ansi-cyan-fg">0.</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">-&gt;</span><span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/fastai/basic_train.py</span> in <span class="ansi-cyan-fg">fit</span><span class="ansi-blue-fg">(epochs, learn, callbacks, metrics)</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>             <span class="ansi-green-fg">for</span> xb<span class="ansi-blue-fg">,</span>yb <span class="ansi-green-fg">in</span> progress_bar<span class="ansi-blue-fg">(</span>learn<span class="ansi-blue-fg">.</span>data<span class="ansi-blue-fg">.</span>train_dl<span class="ansi-blue-fg">,</span> parent<span class="ansi-blue-fg">=</span>pbar<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    100</span>                 xb<span class="ansi-blue-fg">,</span> yb <span class="ansi-blue-fg">=</span> cb_handler<span class="ansi-blue-fg">.</span>on_batch_begin<span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">,</span> yb<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 101</span><span class="ansi-red-fg">                 </span>loss <span class="ansi-blue-fg">=</span> loss_batch<span class="ansi-blue-fg">(</span>learn<span class="ansi-blue-fg">.</span>model<span class="ansi-blue-fg">,</span> xb<span class="ansi-blue-fg">,</span> yb<span class="ansi-blue-fg">,</span> learn<span class="ansi-blue-fg">.</span>loss_func<span class="ansi-blue-fg">,</span> learn<span class="ansi-blue-fg">.</span>opt<span class="ansi-blue-fg">,</span> cb_handler<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    102</span>                 <span class="ansi-green-fg">if</span> cb_handler<span class="ansi-blue-fg">.</span>on_batch_end<span class="ansi-blue-fg">(</span>loss<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> <span class="ansi-green-fg">break</span>
+<span class="ansi-green-intense-fg ansi-bold">    103</span> 
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/fastai/basic_train.py</span> in <span class="ansi-cyan-fg">loss_batch</span><span class="ansi-blue-fg">(model, xb, yb, loss_func, opt, cb_handler)</span>
+<span class="ansi-green-intense-fg ansi-bold">     24</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_listy<span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> xb <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>xb<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-intense-fg ansi-bold">     25</span>     <span class="ansi-green-fg">if</span> <span class="ansi-green-fg">not</span> is_listy<span class="ansi-blue-fg">(</span>yb<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span> yb <span class="ansi-blue-fg">=</span> <span class="ansi-blue-fg">[</span>yb<span class="ansi-blue-fg">]</span>
+<span class="ansi-green-fg">---&gt; 26</span><span class="ansi-red-fg">     </span>out <span class="ansi-blue-fg">=</span> model<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>xb<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     27</span>     out <span class="ansi-blue-fg">=</span> cb_handler<span class="ansi-blue-fg">.</span>on_loss_begin<span class="ansi-blue-fg">(</span>out<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     28</span> 
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-4-472fe236abfe&gt;</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, orig, orig2, *args)</span>
+<span class="ansi-green-intense-fg ansi-bold">      9</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> orig<span class="ansi-blue-fg">,</span> orig2<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">*</span>args<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     10</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>gen_mode<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">---&gt; 11</span><span class="ansi-red-fg">             </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>forward_gen<span class="ansi-blue-fg">(</span>orig<span class="ansi-blue-fg">,</span> orig2<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     12</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     13</span>             <span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>forward_disc<span class="ansi-blue-fg">(</span>orig<span class="ansi-blue-fg">,</span> orig2<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">&lt;ipython-input-4-472fe236abfe&gt;</span> in <span class="ansi-cyan-fg">forward_gen</span><span class="ansi-blue-fg">(self, orig, orig2)</span>
+<span class="ansi-green-intense-fg ansi-bold">     42</span>         rand_style <span class="ansi-blue-fg">=</span> torch<span class="ansi-blue-fg">.</span>randn<span class="ansi-blue-fg">(</span>orig<span class="ansi-blue-fg">.</span>shape<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">,</span> <span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     43</span>         one_rand <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>decoder<span class="ansi-blue-fg">(</span>orig_cont<span class="ansi-blue-fg">,</span> rand_style<span class="ansi-blue-fg">,</span> orig_hooks<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 44</span><span class="ansi-red-fg">         </span>two_rand <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>decoder<span class="ansi-blue-fg">(</span>orig2_cont<span class="ansi-blue-fg">,</span> rand_style<span class="ansi-blue-fg">,</span> orig2_hooks<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     45</span> 
+<span class="ansi-green-intense-fg ansi-bold">     46</span>         <span class="ansi-red-fg">#encoder random style image</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/HiDT/HiDT/adaptive_unet.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, xb, style, hooks)</span>
+<span class="ansi-green-intense-fg ansi-bold">    161</span>         xb <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>ada_skip_blocks<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">3</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">,</span> style<span class="ansi-blue-fg">,</span> hooks<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">1</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    162</span>         xb <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>up2<span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 163</span><span class="ansi-red-fg">         </span>xb <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>ada_skip_blocks<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">4</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">(</span>xb<span class="ansi-blue-fg">,</span> style<span class="ansi-blue-fg">,</span> hooks<span class="ansi-blue-fg">[</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    164</span>         <span class="ansi-green-fg">return</span> xb
+<span class="ansi-green-intense-fg ansi-bold">    165</span> 
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/HiDT/HiDT/adaptive_unet.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, content, style, hook)</span>
+<span class="ansi-green-intense-fg ansi-bold">    129</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> content<span class="ansi-blue-fg">,</span> style<span class="ansi-blue-fg">,</span> hook<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    130</span>         ada <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>ada_block<span class="ansi-blue-fg">(</span>content<span class="ansi-blue-fg">,</span> style<span class="ansi-blue-fg">,</span> hook<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">--&gt; 131</span><span class="ansi-red-fg">         </span>res <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>res_block<span class="ansi-blue-fg">(</span>ada<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    132</span> 
+<span class="ansi-green-intense-fg ansi-bold">    133</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>skip <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/HiDT/HiDT/building_blocks.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, x)</span>
+<span class="ansi-green-intense-fg ansi-bold">    185</span> 
+<span class="ansi-green-intense-fg ansi-bold">    186</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> x<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 187</span><span class="ansi-red-fg">         </span>res <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>model<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    188</span> 
+<span class="ansi-green-intense-fg ansi-bold">    189</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>skip <span class="ansi-green-fg">is</span> <span class="ansi-green-fg">not</span> <span class="ansi-green-fg">None</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/container.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, input)</span>
+<span class="ansi-green-intense-fg ansi-bold">     98</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">     99</span>         <span class="ansi-green-fg">for</span> module <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 100</span><span class="ansi-red-fg">             </span>input <span class="ansi-blue-fg">=</span> module<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    101</span>         <span class="ansi-green-fg">return</span> input
+<span class="ansi-green-intense-fg ansi-bold">    102</span> 
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/HiDT/HiDT/building_blocks.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, x)</span>
+<span class="ansi-green-intense-fg ansi-bold">    135</span> 
+<span class="ansi-green-intense-fg ansi-bold">    136</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> x<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 137</span><span class="ansi-red-fg">         </span>x <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>conv<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">.</span>pad<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    138</span>         <span class="ansi-green-fg">if</span> self<span class="ansi-blue-fg">.</span>norm<span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    139</span>             x <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>norm<span class="ansi-blue-fg">(</span>x<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/module.py</span> in <span class="ansi-cyan-fg">__call__</span><span class="ansi-blue-fg">(self, *input, **kwargs)</span>
+<span class="ansi-green-intense-fg ansi-bold">    548</span>             result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>_slow_forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    549</span>         <span class="ansi-green-fg">else</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 550</span><span class="ansi-red-fg">             </span>result <span class="ansi-blue-fg">=</span> self<span class="ansi-blue-fg">.</span>forward<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">*</span>input<span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">**</span>kwargs<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    551</span>         <span class="ansi-green-fg">for</span> hook <span class="ansi-green-fg">in</span> self<span class="ansi-blue-fg">.</span>_forward_hooks<span class="ansi-blue-fg">.</span>values<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-intense-fg ansi-bold">    552</span>             hook_result <span class="ansi-blue-fg">=</span> hook<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">,</span> result<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/conv.py</span> in <span class="ansi-cyan-fg">forward</span><span class="ansi-blue-fg">(self, input)</span>
+<span class="ansi-green-intense-fg ansi-bold">    347</span> 
+<span class="ansi-green-intense-fg ansi-bold">    348</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+<span class="ansi-green-fg">--&gt; 349</span><span class="ansi-red-fg">         </span><span class="ansi-green-fg">return</span> self<span class="ansi-blue-fg">.</span>_conv_forward<span class="ansi-blue-fg">(</span>input<span class="ansi-blue-fg">,</span> self<span class="ansi-blue-fg">.</span>weight<span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">    350</span> 
+<span class="ansi-green-intense-fg ansi-bold">    351</span> <span class="ansi-green-fg">class</span> Conv3d<span class="ansi-blue-fg">(</span>_ConvNd<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-green-fg">~/Desktop/COCOUI/create/lib/python3.7/site-packages/torch/nn/modules/conv.py</span> in <span class="ansi-cyan-fg">_conv_forward</span><span class="ansi-blue-fg">(self, input, weight)</span>
+<span class="ansi-green-intense-fg ansi-bold">    344</span>                             _pair(0), self.dilation, self.groups)
+<span class="ansi-green-intense-fg ansi-bold">    345</span>         return F.conv2d(input, weight, self.bias, self.stride,
+<span class="ansi-green-fg">--&gt; 346</span><span class="ansi-red-fg">                         self.padding, self.dilation, self.groups)
+</span><span class="ansi-green-intense-fg ansi-bold">    347</span> 
+<span class="ansi-green-intense-fg ansi-bold">    348</span>     <span class="ansi-green-fg">def</span> forward<span class="ansi-blue-fg">(</span>self<span class="ansi-blue-fg">,</span> input<span class="ansi-blue-fg">)</span><span class="ansi-blue-fg">:</span>
+
+<span class="ansi-red-fg">KeyboardInterrupt</span>: </pre>
+</div>
 </div>
 
 </div>
