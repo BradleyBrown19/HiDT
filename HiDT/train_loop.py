@@ -16,6 +16,8 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
+from torch.nn import init
+import torchvision
 
 from torch.utils.data import DataLoader
 from torch.utils.data.dataset import TensorDataset
@@ -24,17 +26,17 @@ import pdb
 from .building_blocks import *
 from .adaptive_unet import *
 from .data_bunch import *
-from .discriminator import *
+from .discriminators import *
 from .losses import *
 
 # Cell
 class HiDT(Learner):
     "A gan learner to train a HiDT model"
     def __init__(self, data:DataBunch, content_encoder:nn.Module, style_encoder:nn.Module,
-                 decoder:nn.Module, discriminator:nn.Module, gen_loss_func:LossFunction,
+                 decoder:nn.Module, discriminator:nn.Module, cdiscriminator: nn.Module, gen_loss_func:LossFunction,
                  crit_loss_func:LossFunction, n_crit=None, n_gen=None, switcher:Callback=None, gen_first:bool=False, switch_eval:bool=True,
                  show_img:bool=True, clip:float=None, **learn_kwargs):
-        gan = HiDTModule(content_encoder, style_encoder, decoder, discriminator)
+        gan = HiDTModule(content_encoder, style_encoder, decoder, discriminator, cdiscriminator)
         loss_func = HiDTLoss(gen_loss_func, crit_loss_func, gan)
         switcher = ifnone(switcher, partial(FixedGANSwitcher, n_crit=n_crit, n_gen=n_gen))
         super().__init__(data=data, model=gan, loss_func=loss_func, callback_fns=[switcher], **learn_kwargs)
@@ -45,10 +47,16 @@ class HiDT(Learner):
 # Cell
 class HiDTModule(nn.Module):
     "Wrapper around a `generator` and a `critic` to create a GAN."
-    def __init__(self, content_encoder=None, style_encoder=None, decoder=None, discriminator=None, gen_mode:bool=True):
+    def __init__(self, content_encoder=None, style_encoder=None, decoder=None, discriminator=None, cdiscriminator=None, gen_mode:bool=True):
         super().__init__()
         self.gen_mode = gen_mode
-        self.content_encoder, self.style_encoder, self.decoder, self.discriminator = content_encoder, style_encoder, decoder, discriminator
+        self.content_encoder, self.style_encoder, self.decoder = content_encoder, style_encoder, decoder
+        self.discriminator, self.cdiscriminator = discriminator, cdiscriminator
+        self.segmenter = nn.Sequential(
+            torchvision.models.segmentation.fcn_resnet101(pretrained=True),
+            Lambda(lambda x: x['out']),
+            nn.Sigmoid()
+        )
 
     def forward(self, orig, orig2, *args):
         if self.gen_mode:
@@ -97,17 +105,30 @@ class HiDTModule(nn.Module):
         one_rand_recon = self.decoder(one_rand_cont, one_rand_style, one_rand_hooks)
         two_rand_recon = self.decoder(two_rand_cont, two_rand_style, two_rand_hooks)
 
+        #segmented images
+        orig_seg = self.segmenter(orig)
+        orig2_seg = self.segmenter(orig2)
+        one2two_seg = self.segmenter(one2two)
+        two2one_seg = self.segmenter(two2one)
+        one_rand_seg = self.segmenter(one_rand)
+        two_rand_seg = self.segmenter(two_rand)
+
         #discrinate generated images
-        one2two = self.discriminator(one2two)
-        two2one = self.discriminator(two2one)
-        one_rand = self.discriminator(one_rand)
-        two_rand = self.discriminator(two_rand)
+        one2twou = self.discriminator(one2two)
+        two2oneu = self.discriminator(two2one)
+        one_randu = self.discriminator(one_rand)
+        two_randu = self.discriminator(two_rand)
+        one2twoc = self.cdiscriminator(one2two)
+        two2onec = self.cdiscriminator(two2one)
+        one_randc = self.cdiscriminator(one_rand)
+        two_randc = self.cdiscriminator(two_rand)
 
         #lots of losses
         return [orig, orig2, orig_recon, orig2_recon, orig_style, orig2_style, orig_cont, orig2_cont, \
-                one2two, two2one, one2two_style, two2one_style, one2two_cont, two2one_cont, cycled_orig, \
-               cycled_orig2, one_rand, two_rand, one_rand_cont, two_rand_cont, one_rand_style, two_rand_style, \
-               one_rand_recon, two_rand_recon, rand_style]
+                one2twou, two2oneu, one2two_style, two2one_style, one2two_cont, two2one_cont, cycled_orig, \
+               cycled_orig2, one_randu, two_randu, one_rand_cont, two_rand_cont, one_rand_style, two_rand_style, \
+               one_rand_recon, two_rand_recon, rand_style, one2twoc, two2onec, one_randc, two_randc, \
+               orig_seg, orig2_seg, one2two_seg, two2one_seg, one_rand_seg, two_rand_seg]
 
     def forward_disc(self, orig, orig2):
 
@@ -123,13 +144,17 @@ class HiDTModule(nn.Module):
         two2one = self.decoder(orig2_cont, orig_style, orig2_hooks)
 
         #discriminate
-        one2two = self.discriminator(one2two)
-        two2one = self.discriminator(two2one)
-        orig = self.discriminator(orig)
-        orig2 = self.discriminator(orig2)
+        one2twou = self.discriminator(one2two)
+        two2oneu = self.discriminator(two2one)
+        origu = self.discriminator(orig)
+        orig2u = self.discriminator(orig2)
+        one2twoc = self.cdiscriminator(one2two)
+        two2onec = self.cdiscriminator(two2one)
+        origc = self.cdiscriminator(orig)
+        orig2c = self.cdiscriminator(orig2)
 
 
-        return orig, orig2, one2two, two2one
+        return origu, orig2u, one2twou, two2oneu, one2twoc, two2onec, origc, orig2c
 
     def switch(self, gen_mode:bool=None):
         "Put the model in generator mode if `gen_mode`, in critic mode otherwise."
@@ -143,8 +168,9 @@ class HiDTTrainer(LearnerCallback):
                  show_img:bool=True):
         super().__init__(learn)
         self.switch_eval,self.clip,self.beta,self.gen_first,self.show_img = switch_eval,clip,beta,gen_first,show_img
-        self.content_encoder, self.style_encoder, self.decoder, self.discriminator = \
-            self.model.content_encoder, self.model.style_encoder, self.model.decoder, self.model.discriminator
+        self.content_encoder, self.style_encoder, self.decoder, self.discriminator, self.cdiscriminator = \
+            self.model.content_encoder, self.model.style_encoder, self.model.decoder, self.model.discriminator, \
+            self.model.cdiscriminator
 
     def _set_trainable(self):
         #switching eval modes between disc and generator
@@ -153,19 +179,23 @@ class HiDTTrainer(LearnerCallback):
             self.style_encoder.train()
             self.decoder.train()
             self.discriminator.eval()
+            self.cdiscriminator.eval()
             requires_grad(self.content_encoder, True)
             requires_grad(self.style_encoder, True)
             requires_grad(self.decoder, True)
             requires_grad(self.discriminator, False)
+            requires_grad(self.cdiscriminator, False)
         else:
             self.content_encoder.eval()
             self.style_encoder.eval()
             self.decoder.eval()
             self.discriminator.train()
-            requires_grad(self.content_encoder, True)
-            requires_grad(self.style_encoder, True)
-            requires_grad(self.decoder, True)
+            self.cdiscriminator.train()
+            requires_grad(self.content_encoder, False)
+            requires_grad(self.style_encoder, False)
+            requires_grad(self.decoder, False)
             requires_grad(self.discriminator, True)
+            requires_grad(self.cdiscriminator, True)
 
     def on_train_begin(self, *args, **kwargs):
         "Create the optimizers for the generator and critic if necessary, initialize smootheners."

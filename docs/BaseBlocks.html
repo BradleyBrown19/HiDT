@@ -45,7 +45,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="UnetBlock" class="doc_header"><code>class</code> <code>UnetBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L25" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>UnetBlock</code>(<strong><code>up_in_c</code></strong>:<code>int</code>, <strong><code>x_in_c</code></strong>:<code>int</code>, <strong><code>hook</code></strong>:<code>Hook</code>, <strong><code>final_div</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>blur</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>leaky</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>self_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
+<h2 id="UnetBlock" class="doc_header"><code>class</code> <code>UnetBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L27" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>UnetBlock</code>(<strong><code>up_in_c</code></strong>:<code>int</code>, <strong><code>x_in_c</code></strong>:<code>int</code>, <strong><code>hook</code></strong>:<code>Hook</code>, <strong><code>final_div</code></strong>:<code>bool</code>=<em><code>True</code></em>, <strong><code>blur</code></strong>:<code>bool</code>=<em><code>False</code></em>, <strong><code>leaky</code></strong>:<code>float</code>=<em><code>None</code></em>, <strong><code>self_attention</code></strong>:<code>bool</code>=<em><code>False</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>A quasi-UNet block, using <code>PixelShuffle_ICNR upsampling</code>.</p>
 
@@ -84,7 +84,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="UpBlock" class="doc_header"><code>class</code> <code>UpBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L57" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>UpBlock</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>) :: <code>Module</code></p>
+<h2 id="UpBlock" class="doc_header"><code>class</code> <code>UpBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L59" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>UpBlock</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>Pixel shuffle upsampling for unet upstream</p>
 
@@ -116,7 +116,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="UpResBlock" class="doc_header"><code>class</code> <code>UpResBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L79" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>UpResBlock</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>) :: <code>Module</code></p>
+<h2 id="UpResBlock" class="doc_header"><code>class</code> <code>UpResBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L81" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>UpResBlock</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>) :: <code>Module</code></p>
 </blockquote>
 <p>Pixel shuffle upsampling for unet upstream</p>
 
@@ -148,7 +148,7 @@ sidebar: home_sidebar
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="Conv2dBlock" class="doc_header"><code>class</code> <code>Conv2dBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L104" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Conv2dBlock</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>, <strong><code>ks</code></strong>=<em><code>3</code></em>, <strong><code>stride</code></strong>=<em><code>2</code></em>, <strong><code>norm</code></strong>=<em><code>'in'</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>) :: <code>Module</code></p>
+<h2 id="Conv2dBlock" class="doc_header"><code>class</code> <code>Conv2dBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L106" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>Conv2dBlock</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>, <strong><code>ks</code></strong>=<em><code>3</code></em>, <strong><code>stride</code></strong>=<em><code>2</code></em>, <strong><code>norm</code></strong>=<em><code>'in'</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -200,7 +200,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="LayerNorm" class="doc_header"><code>class</code> <code>LayerNorm</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L145" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LayerNorm</code>(<strong><code>num_features</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>, <strong><code>affine</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
+<h2 id="LayerNorm" class="doc_header"><code>class</code> <code>LayerNorm</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L147" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>LayerNorm</code>(<strong><code>num_features</code></strong>, <strong><code>eps</code></strong>=<em><code>1e-05</code></em>, <strong><code>affine</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -252,76 +252,7 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="ResBlock" class="doc_header"><code>class</code> <code>ResBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L175" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ResBlock</code>(<strong><code>dim</code></strong>, <strong><code>dout</code></strong>, <strong><code>norm</code></strong>=<em><code>'in'</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>ks</code></strong>=<em><code>3</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>, <strong><code>auto</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
-</blockquote>
-<p>Base class for all neural network modules.</p>
-<p>Your models should also subclass this class.</p>
-<p>Modules can also contain other Modules, allowing to nest them in
-a tree structure. You can assign the submodules as regular attributes::</p>
-
-<pre><code>import torch.nn as nn
-import torch.nn.functional as F
-
-class Model(nn.Module):
-    def __init__(self):
-        super(Model, self).__init__()
-        self.conv1 = nn.Conv2d(1, 20, 5)
-        self.conv2 = nn.Conv2d(20, 20, 5)
-
-    def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
-
-</code></pre>
-<p>Submodules assigned in this way will be registered, and will have their
-parameters converted too when you call :meth:<code>to</code>, etc.</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span>nn.Conv2d<span class="o">??</span>
-</pre></div>
-
-    </div>
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h2 id="ResBlocks" class="doc_header"><code>class</code> <code>ResBlocks</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L195" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ResBlocks</code>(<strong><code>num_blocks</code></strong>, <strong><code>dim</code></strong>, <strong><code>norm</code></strong>=<em><code>'in'</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>) :: <code>Module</code></p>
+<h2 id="ResBlock" class="doc_header"><code>class</code> <code>ResBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L177" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ResBlock</code>(<strong><code>dim</code></strong>, <strong><code>dout</code></strong>, <strong><code>norm</code></strong>=<em><code>'in'</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>ks</code></strong>=<em><code>3</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>, <strong><code>auto</code></strong>=<em><code>True</code></em>) :: <code>Module</code></p>
 </blockquote>
 <p>Base class for all neural network modules.</p>
 <p>Your models should also subclass this class.</p>
@@ -373,8 +304,124 @@ parameters converted too when you call :meth:<code>to</code>, etc.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="conv_and_res" class="doc_header"><code>conv_and_res</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>conv_and_res</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>)</p>
+<h2 id="ResBlocks" class="doc_header"><code>class</code> <code>ResBlocks</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L197" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>ResBlocks</code>(<strong><code>num_blocks</code></strong>, <strong><code>dim</code></strong>, <strong><code>norm</code></strong>=<em><code>'in'</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>padding</code></strong>=<em><code>1</code></em>) :: <code>Module</code></p>
 </blockquote>
+<p>Base class for all neural network modules.</p>
+<p>Your models should also subclass this class.</p>
+<p>Modules can also contain other Modules, allowing to nest them in
+a tree structure. You can assign the submodules as regular attributes::</p>
+
+<pre><code>import torch.nn as nn
+import torch.nn.functional as F
+
+class Model(nn.Module):
+    def __init__(self):
+        super(Model, self).__init__()
+        self.conv1 = nn.Conv2d(1, 20, 5)
+        self.conv2 = nn.Conv2d(20, 20, 5)
+
+    def forward(self, x):
+        x = F.relu(self.conv1(x))
+        return F.relu(self.conv2(x))
+
+</code></pre>
+<p>Submodules assigned in this way will be registered, and will have their
+parameters converted too when you call :meth:<code>to</code>, etc.</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="conv_and_res" class="doc_header"><code>conv_and_res</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L209" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>conv_and_res</code>(<strong><code>ni</code></strong>, <strong><code>nf</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="DisResBlock" class="doc_header"><code>class</code> <code>DisResBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L212" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>DisResBlock</code>(<strong><code>in_ch</code></strong>, <strong><code>out_ch</code></strong>, <strong><code>h_ch</code></strong>=<em><code>None</code></em>, <strong><code>ksize</code></strong>=<em><code>3</code></em>, <strong><code>pad</code></strong>=<em><code>1</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>, <strong><code>downsample</code></strong>=<em><code>False</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Resblock for projection discriminator, adapted from: <a href="https://github.com/XHChen0528/SNGAN_Projection_Pytorch">https://github.com/XHChen0528/SNGAN_Projection_Pytorch</a></p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h2 id="OptimizedBlock" class="doc_header"><code>class</code> <code>OptimizedBlock</code><a href="https://github.com/BradleyBrown19/HiDT/tree/master/HiDT/building_blocks.py#L258" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>OptimizedBlock</code>(<strong><code>in_ch</code></strong>, <strong><code>out_ch</code></strong>, <strong><code>ksize</code></strong>=<em><code>3</code></em>, <strong><code>pad</code></strong>=<em><code>1</code></em>, <strong><code>activation</code></strong>=<em><code>'relu'</code></em>) :: <code>Module</code></p>
+</blockquote>
+<p>Projection based discrminator, adapted from: <a href="https://github.com/XHChen0528/SNGAN_Projection_Pytorch">https://github.com/XHChen0528/SNGAN_Projection_Pytorch</a></p>
 
 </div>
 

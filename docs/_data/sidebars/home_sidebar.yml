@@ -22,11 +22,14 @@ entries:
       title: Custom DataBunch Object
       url: /DataBunch
     - output: web,pdf
-      title: Unconditional Discriminator
-      url: /LSGAN_Discriminator
+      title: Projection Based Conditional Discriminator
+      url: /Discrminators
     - output: web,pdf
       title: Losses
       url: /Losses
+    - output: web,pdf
+      title: Title
+      url: /SegmentationLoss
     - output: web,pdf
       title: Learner
       url: /TrainLoop

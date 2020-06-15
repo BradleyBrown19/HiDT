@@ -5,8 +5,9 @@
     "Getting Images": "/AdaptiveUnet",
     "Building Blocks": "/BaseBlocks",
     "Custom DataBunch Object": "/DataBunch",
-    "Unconditional Discriminator": "/LSGAN_Discriminator",
+    "Projection Based Conditional Discriminator": "/Discrminators",
     "Losses": "/Losses",
+    "Title": "/SegmentationLoss",
     "Learner": "/TrainLoop"
   }
 }
