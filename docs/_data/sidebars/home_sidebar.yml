@@ -13,7 +13,7 @@ entries:
       title: module name here
       url: /core
     - output: web,pdf
-      title: Getting Images
+      title: Adaptive Unet
       url: /AdaptiveUnet
     - output: web,pdf
       title: Building Blocks
@@ -25,14 +25,11 @@ entries:
       title: Projection Based Conditional Discriminator
       url: /Discrminators
     - output: web,pdf
-      title: Losses
+      title: HiDT Loss
       url: /Losses
     - output: web,pdf
-      title: Title
-      url: /SegmentationLoss
-    - output: web,pdf
-      title: Learner
-      url: /TrainLoop
+      title: HiDT Model Flow
+      url: /Training
     output: web
     title: HiDT
   output: web

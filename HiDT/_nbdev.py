@@ -30,20 +30,20 @@ index = {"ContentEncoder": "AdaptiveUnet.ipynb",
          "get_rec_loss": "Losses.ipynb",
          "get_latent_loss": "Losses.ipynb",
          "get_sdist_loss": "Losses.ipynb",
-         "get_seg_loss": "Losses.ipynb",
          "bce": "Losses.ipynb",
+         "get_seg_loss": "Losses.ipynb",
          "HiDTLoss": "Losses.ipynb",
-         "HiDT": "TrainLoop.ipynb",
-         "HiDTModule": "TrainLoop.ipynb",
-         "HiDTTrainer": "TrainLoop.ipynb",
-         "FixedGANSwitcher": "TrainLoop.ipynb"}
+         "HiDT": "Training.ipynb",
+         "HiDTModule": "Training.ipynb",
+         "HiDTTrainer": "Training.ipynb",
+         "FixedGANSwitcher": "Training.ipynb"}
 
 modules = ["adaptive_unet.py",
            "building_blocks.py",
            "data_bunch.py",
            "discriminators.py",
            "losses.py",
-           "train_loop.py"]
+           "training.py"]
 
 doc_url = "https://BradleyBrown19.github.io/HiDT/"
 
