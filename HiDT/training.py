@@ -119,10 +119,10 @@ class HiDTModule(nn.Module):
         two2oneu = self.discriminator(two2one)
         one_randu = self.discriminator(one_rand)
         two_randu = self.discriminator(two_rand)
-        one2twoc = self.cdiscriminator(one2two)
-        two2onec = self.cdiscriminator(two2one)
-        one_randc = self.cdiscriminator(one_rand)
-        two_randc = self.cdiscriminator(two_rand)
+        one2twoc = self.cdiscriminator(one2two, orig2_style)
+        two2onec = self.cdiscriminator(two2one, orig_style)
+        one_randc = self.cdiscriminator(one_rand, rand_style)
+        two_randc = self.cdiscriminator(two_rand, rand_style)
 
         #lots of losses
         return [orig, orig2, orig_recon, orig2_recon, orig_style, orig2_style, orig_cont, orig2_cont, \
@@ -149,10 +149,10 @@ class HiDTModule(nn.Module):
         two2oneu = self.discriminator(two2one)
         origu = self.discriminator(orig)
         orig2u = self.discriminator(orig2)
-        one2twoc = self.cdiscriminator(one2two)
-        two2onec = self.cdiscriminator(two2one)
-        origc = self.cdiscriminator(orig)
-        orig2c = self.cdiscriminator(orig2)
+        one2twoc = self.cdiscriminator(one2two, orig2_style)
+        two2onec = self.cdiscriminator(two2one, orig_style)
+        origc = self.cdiscriminator(orig, orig_style)
+        orig2c = self.cdiscriminator(orig2, orig2_style)
 
 
         return origu, orig2u, one2twou, two2oneu, one2twoc, two2onec, origc, orig2c

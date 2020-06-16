@@ -1,10 +1,11 @@
 {
   "HiDT": {
     "Overview": "/",
+    "module name here": "/core",
     "Adaptive Unet": "/AdaptiveUnet",
     "Building Blocks": "/BaseBlocks",
     "Custom DataBunch Object": "/DataBunch",
-    "Discriminator": "/Discrminators",
+    "Projection Based Conditional Discriminator": "/Discrminators",
     "HiDT Loss": "/Losses",
     "HiDT Model Flow": "/Training"
   }

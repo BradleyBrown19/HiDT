@@ -39,9 +39,8 @@ class ProjectionDiscriminator(nn.Module):
         ])
 
         self.l6 = torch.nn.utils.spectral_norm(nn.Linear(num_feat * 16, 1))
-        if num_classes > 0:
-            self.style = torch.nn.utils.spectral_norm(
-                nn.Embedding(num_classes, num_feat * 16))
+        self.style = torch.nn.utils.spectral_norm(
+                nn.Linear(3, num_feat * 16))
 
         self._initialize()
 
@@ -60,6 +59,7 @@ class ProjectionDiscriminator(nn.Module):
         h = torch.sum(h, dim=(2, 3))
 
         output = self.l6(h)
+
         if y is not None:
             output += torch.sum(self.style(y) * h, dim=1, keepdim=True)
 
