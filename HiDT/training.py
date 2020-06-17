@@ -35,7 +35,7 @@ class HiDT(Learner):
     "A gan learner to train a HiDT model"
     def __init__(self, data:DataBunch, content_encoder:nn.Module, style_encoder:nn.Module,
                  decoder:nn.Module, discriminator:nn.Module, cdiscriminator: nn.Module, gen_loss_func:LossFunction,
-                 crit_loss_func:LossFunction, n_crit=None, n_gen=None, switcher:Callback=None, gen_first:bool=False, switch_eval:bool=True,
+                 crit_loss_func:LossFunction, n_crit=None, n_gen=None, switcher:Callback=None, gen_first:bool=True, switch_eval:bool=True,
                  show_img:bool=True, clip:float=None, **learn_kwargs):
         gan = HiDTModule(content_encoder, style_encoder, decoder, discriminator, cdiscriminator)
         loss_func = HiDTLoss(gen_loss_func, crit_loss_func, gan)
@@ -119,10 +119,10 @@ class HiDTModule(nn.Module):
         two2oneu = self.discriminator(two2one)
         one_randu = self.discriminator(one_rand)
         two_randu = self.discriminator(two_rand)
-        one2twoc = self.cdiscriminator(one2two, orig2_style)
-        two2onec = self.cdiscriminator(two2one, orig_style)
-        one_randc = self.cdiscriminator(one_rand, rand_style)
-        two_randc = self.cdiscriminator(two_rand, rand_style)
+        one2twoc = self.cdiscriminator(one2two, orig2_style.clone().detach())
+        two2onec = self.cdiscriminator(two2one, orig_style.clone().detach())
+        one_randc = self.cdiscriminator(one_rand, rand_style.clone().detach())
+        two_randc = self.cdiscriminator(two_rand, rand_style.clone().detach())
 
         #lots of losses
         return [orig, orig2, orig_recon, orig2_recon, orig_style, orig2_style, orig_cont, orig2_cont, \
@@ -149,10 +149,10 @@ class HiDTModule(nn.Module):
         two2oneu = self.discriminator(two2one)
         origu = self.discriminator(orig)
         orig2u = self.discriminator(orig2)
-        one2twoc = self.cdiscriminator(one2two, orig2_style)
-        two2onec = self.cdiscriminator(two2one, orig_style)
-        origc = self.cdiscriminator(orig, orig_style)
-        orig2c = self.cdiscriminator(orig2, orig2_style)
+        one2twoc = self.cdiscriminator(one2two, orig2_style.clone().detach())
+        two2onec = self.cdiscriminator(two2one, orig_style.clone().detach())
+        origc = self.cdiscriminator(orig, orig_style.clone().detach())
+        orig2c = self.cdiscriminator(orig2, orig2_style.clone().detach())
 
 
         return origu, orig2u, one2twou, two2oneu, one2twoc, two2onec, origc, orig2c
@@ -263,7 +263,7 @@ class FixedGANSwitcher(LearnerCallback):
     "Switcher to do `n_crit` iterations of the critic then `n_gen` iterations of the generator."
     def __init__(self, learn:Learner, n_crit=5, n_gen=1):
         super().__init__(learn)
-        self.n_crit,self.n_gen = 1,1
+        self.n_crit,self.n_gen = 3,1
 
     def on_train_begin(self, **kwargs):
         "Initiate the iteration counts."

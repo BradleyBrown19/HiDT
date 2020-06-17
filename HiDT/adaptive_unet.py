@@ -95,7 +95,7 @@ def get_adastats(features):
 # Cell
 def AdaIN(content_feat, style_feat):
     #calculating channel and batch specific stats
-    smean, sstd = get_adastats(style_feat.view(1,1,3))
+    smean, sstd = get_adastats(style_feat)
     cmean, cstd = get_adastats(content_feat)
 
     csize = content_feat.size()
@@ -109,9 +109,16 @@ class AdaSkipBlock(nn.Module):
         super().__init__()
         self.ada = AdaIN
         self.dense = Conv2dBlock(nin*2, nin, ks=3, stride=1)
+        self.ada_creator = nn.Sequential(
+            nn.Linear(3, 16),
+            nn.Linear(16,64),
+            nn.Linear(64,256),
+            Lambda(lambda x: x.view(x.shape[0], nin, -1))
+        )
 
     def forward(self, content, style, hook):
-        ada = self.ada(hook, style)
+        ada_params = self.ada_creator(style)
+        ada = self.ada(hook, ada_params)
         combined = torch.cat([content, ada], dim=1)
         return self.dense(combined)
 
