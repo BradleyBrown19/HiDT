@@ -115,6 +115,8 @@ class HiDTModule(nn.Module):
         two_rand_seg = self.segmenter(two_rand)
 
         #discrinate generated images
+        # "deatch the styles from the computational graph when feeding to the conditional
+        # discriminator in the update step"
         one2twou = self.discriminator(one2two)
         two2oneu = self.discriminator(two2one)
         one_randu = self.discriminator(one_rand)
@@ -149,10 +151,10 @@ class HiDTModule(nn.Module):
         two2oneu = self.discriminator(two2one)
         origu = self.discriminator(orig)
         orig2u = self.discriminator(orig2)
-        one2twoc = self.cdiscriminator(one2two, orig2_style.clone().detach())
-        two2onec = self.cdiscriminator(two2one, orig_style.clone().detach())
-        origc = self.cdiscriminator(orig, orig_style.clone().detach())
-        orig2c = self.cdiscriminator(orig2, orig2_style.clone().detach())
+        one2twoc = self.cdiscriminator(one2two, orig2_style)
+        two2onec = self.cdiscriminator(two2one, orig_style)
+        origc = self.cdiscriminator(orig, orig_style)
+        orig2c = self.cdiscriminator(orig2, orig2_style)
 
 
         return origu, orig2u, one2twou, two2oneu, one2twoc, two2onec, origc, orig2c
